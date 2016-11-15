@@ -1,0 +1,80 @@
+<div ng-controller="UsersCtrl" data-ng-init="init()">
+
+  <div class="well well-sm">
+
+    <div class="col-centered">
+      <div class="row">
+        <div class="col-md-12">
+          <p><a href="javascript:window.print();" style="text-decoration: none;"><h4>LISTA DE USUARIOS</h4></a>
+          <!--<p><h5>Fecha: {{date | date:'dd/MM/yyyy h:mm a'}}</h5></p>-->
+        </div>
+      </div>
+      <br>
+      <!--<p class="lead">-->
+        <!--<md-datepicker ng-model="dateFrom" md-placeholder="Fecha desde ..." required></md-datepicker> &lt;!&ndash; md-min-date="minDate" md-max-date="maxDate" &ndash;&gt;-->
+        <!--&nbsp;&nbsp;&nbsp;&nbsp;-->
+        <!--<md-datepicker ng-model="dateTo" md-placeholder="Fecha hasta ..."></md-datepicker> &lt;!&ndash; md-min-date="minDate" md-max-date="maxDate" &ndash;&gt;-->
+        <!--&nbsp;&nbsp;&nbsp;&nbsp;-->
+        <!--<button class="btn btn-primary" id="noprint" ng-click="consult(dateFrom, dateTo)">Consultar</button>-->
+      <!--</p>-->
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="noprint">
+      <form>
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-addon"><i class="fa fa-search"></i></div>
+            <input type="text" class="form-control" placeholder="Buscar" ng-model="searchpackage">
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="table-responsive">
+          <table class="table table-hover" id="incidents">
+            <thead>
+            <tr>
+              <th>TIPO DE USUARIO</th>
+              <th>NOMBRE DE USUARIO</th>
+              <th>PASSWORD</th>
+              <th>NOTAS</th>
+              <th>EN LINEA?</th>
+              <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody id="myTable">
+            <tr ng-repeat="u in users | orderBy:sortType:sortReverse | filter:searchpackage">
+              <td editable-select="u.type" e-ng-options="s.value as s.text for s in types" onbeforesave="updateUser('1', $index, $data)">{{ showType(u.type) }}</td>
+              <td editable-text="u.userName" onbeforesave="updateUser('2', $index, $data)">{{u.userName || 'empty'}}</td>
+              <td editable-text="u.password" onbeforesave="updateUser('3', $index, $data)">{{u.password}}</td>
+              <td editable-textarea="u.notes" e-rows="7" e-cols="40" onbeforesave="updateUser('4', $index, $data)">{{u.notes}}</td>
+              <td>{{u.loggedin == 1? 'Si' : 'No'}}</td>
+              <!--<td><md-button class="md-raised md-warn" id="noprint" ng-click="delUser($index)">&nbsp;Borrar&nbsp;</md-button></td>-->
+              <td><md-button class="md-raised md-warn" id="noprint" ng-click="delUser($index, $event)">&nbsp;Borrar&nbsp;</md-button></td>
+              <td>
+                <div ng-if="u.loggedin == 1">
+                  <md-button class="md-raised md-primary" id="noprint" ng-click="logoutUser($index, $event)">&nbsp;Cerrar Sesión&nbsp;</md-button>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+            <!--<tfoot>-->
+            <!--<tr>-->
+              <!--<td colspan="3"><hr></td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+              <!--<td colspan="3"><h4>Número de consultas en el periodo seleccionado: <b>{{result.length}}</b></h4></td>-->
+            <!--</tr>-->
+            <!--</tfoot>-->
+          </table>
+        </div>
+        <div class="col-md-12 text-center">
+          <ul class="pagination pagination-lg pager" id="myPager"></ul>
+        </div>
+      </div>
+    </div>
+

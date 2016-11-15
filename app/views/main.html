@@ -1,0 +1,188 @@
+
+
+<div class="container" ng-controller="MainCtrl" data-ng-init="init()">
+  <div class="row">
+    <div class="col-md-12">
+      <p><a href="javascript:window.print();" style="text-decoration: none;"><h3>CONSULTA DE ESTATUS DE MENSAJERIA</h3></a>
+      <p><h5>Fecha de consulta: {{date | date:'dd/MM/yyyy h:mm a'}}</h5></p>
+    </div>
+  </div>
+</div>
+<hr>
+<form>
+<div class="container">
+  <div class="row">
+    <div class="col-md-4">
+      <label for="folio">&nbsp;</label>
+      <input type="text" placeholder="FOLIO PARA CONSULTAR" class="form-control" id="folio" ng-model="folio" ng-change="setConfirmUnload(true)" ng-keyup="$event.keyCode == 13 && search(folio)" autofocus>
+    </div>
+    <div class="col-md-3">
+      <label for="fecharecibo">FECHA RECIBO:</label>
+      <input type="text" class="form-control" id="fecharecibo" value="{{result.fecharecibocicsa}}" ng-focus="selectText($event)" style="text-align: center" readonly>
+    </div>
+    <div class="col-md-3">
+      <label for="fechaentrega">FECHA ENTREGA:</label>
+      <input type="text" class="form-control" id="fechaentrega" value="{{result.fecha_entregado}}" style="text-align: center" readonly>
+    </div>
+    <div class="col-md-2">
+      <input type="button" id="search" name="search" ng-click="search(folio)" style="background-image:url(http://www.cicsacorp2.com/consultas/images/find.png); background-repeat: no-repeat; height: 40px; width: 90px; background-position: center; cursor: pointer; background-color: white; border: none; margin-top: 15px;">
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-md-10">
+      <div style="background-color: #FAFAFA; display: inline-block; position: absolute; left: 0px;" ng-show="result.estatus != 'ASIGNADO'"> <h4>Estatus: &nbsp;&nbsp; {{ result.estatus == "CAPTURADO"? ' ALMACEN ' : result.estatus }} </h4></div>
+      <div style="background-color: #FAFAFA; display: inline-block; position: absolute; left: 0px;" ng-show="result.estatus == 'ASIGNADO'"> <h4>Estatus: &nbsp;&nbsp; {{ result.estatus }}, el {{result.fecha_asignacion}} </h4></div>
+      
+      <div style="background-color: #FAFAFA; display: inline-block; position: absolute; right: 0px;" ng-show="result.estatus == 'ENTREGADO'"> <h4>Proceso: &nbsp;&nbsp; {{ result.facturado == 'FACTURADO'? result.facturado : 'ACUSADO' }} </h4></div>
+      <div style="background-color: #FAFAFA; display: inline-block; position: absolute; right: 0px;" ng-show="result.estatus == 'DEVUELTO'"> <h4>Proceso: &nbsp;&nbsp; {{ result.facturado == 'FACTURADO'? result.facturado : 'ACUSADO' }} </h4></div>
+    </div>
+  </div>
+
+</div>
+  <br>
+<hr id="noprint">
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <label for="nombrecliente" class="control-label">NOMBRE DEL CLIENTE:</label>
+    </div>
+    <div class="col-md-8">
+      <input type="text" class="form-control" id="nombrecliente" value="{{result.destinatario}}" readonly>
+    </div>
+  </div>
+  <div class="row">
+    <p>
+    <div class="col-md-3">
+      <label for="campanha">CAMPAÑA:</label>
+    </div>
+    <div class="col-md-4">
+      <input type="text" class="form-control" id="campanha" value="{{result.cac}}" readonly>
+    </div>
+  </div>
+  <div class="row">
+    <p>
+    <div class="col-md-3">
+      <label for="telcontacto">TELÉFONO DE CONTACTO:</label>
+    </div>
+    <div class="col-md-4">
+      <input type="text" class="form-control" id="telcontacto" value="{{result.tel_contacto}}" readonly>
+    </div>
+  </div>
+  <div class="row">
+    <p>
+    <div class="col-md-3">
+      <label for="entidad">ENTIDAD:</label>
+    </div>
+    <div class="col-md-4">
+      <input type="text" class="form-control" id="entidad" value="{{result.entidad}}" readonly>
+    </div>
+  </div>
+  <div class="row">
+    <p>
+    <div class="col-md-3">
+      <label for="direccion">DIRECCIÓN:</label>
+    </div>
+    <div class="col-md-9">
+      <input type="text" class="form-control" id="direccion" value="{{result.domicilio}}" readonly>
+    </div>
+  </div>
+  <div class="row">
+    <p>
+    <div class="col-md-3">
+      <label for="colonia">COLONIA:</label>
+    </div>
+    <div class="col-md-6">
+      <input type="text" class="form-control" id="colonia" value="{{result.colonia}}" readonly>
+    </div>
+  </div>
+  <div class="row">
+    <p>
+    <div class="col-md-3">
+      <label for="poblacion">POBLACIÓN:</label>
+    </div>
+    <div class="col-md-6">
+      <input type="text" class="form-control" id="poblacion" value="{{result.poblacion}}" readonly>
+    </div>
+  </div>
+  <div class="row">
+    <p>
+    <div class="col-md-3">
+      <label for="ciudad">CIUDAD:</label>
+    </div>
+    <div class="col-md-6">
+      <input type="text" class="form-control" id="ciudad"  value="{{result.ciudad}}" readonly>
+    </div>
+  </div>
+  <div class="row">
+    <p>
+    <div class="col-md-3">
+      <label for="cp">CÓDIGO POSTAL:</label>
+    </div>
+    <div class="col-md-3">
+      <input type="text" class="form-control" id="cp" value="{{result.codigo_postal}}" readonly>
+    </div>
+  </div>
+
+  <ng-switch on="usrType">
+    <div ng-switch-when="ADMINISTRADOR">
+      <div class="row">
+        <p>
+        <div class="col-md-3">
+          <label for="historial">HISTORIAL:</label>
+        </div>
+        <div class="col-md-9">
+        <textarea class="form-control" id="historial" rows="15" readonly>{{result.historial}}</textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <p>
+        <div class="col-md-3">
+          <label for="marketing">MARKETING:</label><br><br><br>
+          <md-button class="md-raised md-warn" id="noprint" ng-click="saveMarketing(folio, result.marketingComentarios)">&nbsp;Guardar Cambios&nbsp;</md-button>
+
+          <br><br>
+          <md-button class="md-raised md-primary" id="noprint" ng-click="clear(this)">&nbsp;&nbsp;&nbsp;SIGUIENTE FOLIO&nbsp;&nbsp;&nbsp;</md-button>
+        </div>
+        <div class="col-md-9">
+          <textarea class="form-control" rows="15" id="marketing" ng-change="setConfirmUnload(true)" ng-model="result.marketingComentarios" >{{result.marketingComentarios}}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div ng-switch-when="MARKETING">
+      <div class="row">
+        <p>
+        <div class="col-md-3">
+          <label for="marketing">MARKETING:</label><br><br><br>
+          <md-button class="md-raised md-warn" id="noprint" ng-click="saveMarketing(folio, result.marketingComentarios)">&nbsp;GUARDAR CAMBIOS&nbsp;</md-button>
+
+          <br><br>
+          <md-button class="md-raised md-primary" id="noprint" ng-click="clear(this)">&nbsp;&nbsp;&nbsp;SIGUIENTE FOLIO&nbsp;&nbsp;&nbsp;</md-button>
+        </div>
+        <div class="col-md-9">
+          <textarea class="form-control" rows="15" id="marketing" ng-change="setConfirmUnload(true)" ng-model="result.marketingComentarios" >{{result.marketingComentarios}}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div ng-switch-when="EXTERNO">
+      <div class="row">
+        <p>
+        <div class="col-md-3">
+          <label for="historial2">HISTORIAL:</label>
+
+        <br><br>
+        <md-button class="md-raised md-primary" id="noprint" ng-click="clear(this)">&nbsp;&nbsp;&nbsp;SIGUIENTE FOLIO&nbsp;&nbsp;&nbsp;</md-button>
+
+        </div>
+        <div class="col-md-9">
+          <textarea class="form-control" id="historial2" rows="10" readonly>{{result.marketingComentarios}}</textarea>
+        </div>
+      </div>
+    </div>
+  </ng-switch>
+</form>
+</div>
+<hr>

@@ -1,0 +1,76 @@
+<div ng-controller="ReportesCtrl" data-ng-init="init()">
+
+  <div class="well well-sm">
+    <!--<h1>'Allo, 'Allo!</h1>-->
+    <!--<p class="lead">-->
+    <!--<img src="images/yeoman.png" alt="I'm Yeoman"><br>-->
+    <!--Always a pleasure scaffolding your apps.-->
+    <!--</p>-->
+    <!--<p><a class="btn btn-lg btn-success" ng-href="#/">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>-->
+
+    <div class="col-centered">
+      <div class="row">
+        <div class="col-md-12">
+          <p><a href="javascript:window.print();" style="text-decoration: none;"><h4>REPORTE DE CONSULTAS REALIZADAS</h4></a>
+          <p><h5>Fecha: {{date | date:'dd/MM/yyyy h:mm a'}}</h5></p>
+        </div>
+      </div>
+      <br>
+      <p class="lead">
+        <md-datepicker ng-model="dateFrom" md-placeholder="Fecha desde ..." required></md-datepicker> <!-- md-min-date="minDate" md-max-date="maxDate" -->
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <md-datepicker ng-model="dateTo" md-placeholder="Fecha hasta ..."></md-datepicker> <!-- md-min-date="minDate" md-max-date="maxDate" -->
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <button class="btn btn-primary" id="noprint" ng-click="consult(dateFrom, dateTo)">Consultar</button>
+      </p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div id="noprint">
+      <form>
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-addon"><i class="fa fa-search"></i></div>
+            <input type="text" class="form-control" placeholder="Buscar" ng-model="searchpackage">
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="table-responsive">
+          <table class="table table-hover" id="incidents">
+            <thead>
+            <tr>
+              <th>FOLIO</th>
+              <th>FECHA CONSULTA</th>
+              <th>HORA CONSULTA</th>
+              <th>USUARIO</th>
+            </tr>
+            </thead>
+            <tbody id="myTable">
+            <tr ng-repeat="r in result | orderBy:sortType:sortReverse | filter:searchpackage">
+              <td>{{r.folio}}</td>
+              <td>{{r.fecha_consulta}}</td>
+              <td>{{r.hora_consulta }}</td>
+              <td>{{r.usuario }}</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="3"><hr></td>
+            </tr>
+            <tr>
+              <td colspan="3"><h4>Número de consultas en el periodo seleccionado: <b>{{result.length}}</b></h4></td>
+            </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="col-md-12 text-center">
+          <ul class="pagination pagination-lg pager" id="myPager"></ul>
+        </div>
+      </div>
+    </div>
+
